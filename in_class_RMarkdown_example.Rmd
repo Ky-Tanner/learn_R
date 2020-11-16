@@ -1,0 +1,67 @@
+---
+title: "World Cup Plot Example"
+author: "Ky Tanner"
+date: "9/23/2020"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+***
+
+# World Cup Data
+
+This data is from the 2010 world cup including things like:
+
+* Team Name
+* Position
+- Time Played
+- Shots
+- Passes
+- Tackles
+  + Saves
+  
+***
+
+```{r loading_packages_and_data, message = FALSE, echo = FALSE}
+library("faraway")
+library("dplyr")
+library("ggplot2")
+library("ggthemes")
+library("dlnm")
+data("worldcup")
+```
+
+This is how the data gets manipulated:
+
+```{r manipulating_data}
+worldcup <- worldcup %>%
+  tibble::rownames_to_column(var = "Player")
+top_shooter <- worldcup %>% 
+  filter(Shots == max(Shots)) %>% 
+  mutate(Player_team = paste(Player, Team, sep = ", "))
+worldcup <- worldcup %>% 
+  mutate(top_four = Team %in% c("Netherlands", "Uruguay", "Spain", "Germany"),
+         Position = factor(Position, levels = c("Goalkeeper", "Defender","Midfielder", "Forward")))
+
+```
+
+***
+
+This is how the plot gets created:
+
+```{r plotting_data}
+ggplot(worldcup, aes(Time, Shots)) +
+  geom_point(aes(color = top_four), alpha = .5, size = 2)+
+  theme_few() +
+  labs(x = "Time played in World Cup (minutes)",
+       y = "Shots", color = "Team's final \n ranking") +
+  geom_vline(aes(xintercept = 270), linetype = 2, color = "gray") + 
+  geom_text(data = top_shooter, aes(label = Player_team),hjust = 1.1) +
+  facet_wrap(~ Position, ncol = 4)
+
+```
+

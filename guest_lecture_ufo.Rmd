@@ -1,0 +1,37 @@
+---
+title: "Guest_Lecture_UFO `r params$ufo_shape`s" 
+author: "Ky Tanner"
+date: "10/21/2020"
+output: html_document
+params: 
+  ufo_shape: "fireball"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(stringr)
+library(scales)
+library(broom)
+library(tidyverse)
+library(lubridate)
+```
+
+## Loading Data
+
+```{r}
+all_ufo <- read_csv("data/ufo_sightings.csv")
+
+usa_ufo <- all_ufo %>% 
+  filter(country == "us") %>% 
+  mutate(date_time = mdy_hm(date_time)) %>% 
+  mutate(date_documented = mdy(date_documented)) %>% 
+  filter(ufo_shape == params$ufo_shape)
+```
+
+```{r}
+head(usa_ufo)
+```
+
+Right now we are looking at `r params$ufo_shape`s.
+
+

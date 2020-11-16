@@ -1,0 +1,25 @@
+---
+title: "Example of RMarkdown"
+author: "Ky Tanner"
+date: "9/23/2020"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+## World Cup data
+
+First, load your data:
+
+```{r load_data}
+library(faraway)
+data(worldcup)
+```
+
+Here's a summary:
+
+```{r}
+summary(worldcup)
+```
+
